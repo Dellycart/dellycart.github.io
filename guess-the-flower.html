@@ -5,12 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Guess the Flower</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 40px; }
-    h1 { color: #4CAF50; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff8f0;
+      text-align: center;
+      padding: 30px;
+      color: #333;
+    }
+    h1 {
+      color: #e91e63;
+    }
+    img {
+      max-width: 300px;
+      height: auto;
+      margin: 20px 0;
+      border-radius: 10px;
+      border: 2px solid #e91e63;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      background: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #c2185b;
+    }
+    .result {
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <h1>🌸 Guess the Flower Game</h1>
-  <p>Coming soon... Stay tuned!</p>
+  <h1>🌸 Guess the Flower</h1>
+  <p>Can you guess which flower it is?</p>
+  <img id="flower-img" src="" alt="Flower" />
+  <div id="options"></div>
+  <p class="result" id="result"></p>
+
+  <script>
+    const flowers = [
+      { name: "Rose", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_rose_2.jpg/320px-Red_rose_2.jpg" },
+      { name: "Sunflower", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Sunflower_sky_backdrop.jpg/320px-Sunflower_sky_backdrop.jpg" },
+      { name: "Tulip", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Single_Late_Tulip_%27Queen_of_Night%27.JPG/320px-Single_Late_Tulip_%27Queen_of_Night%27.JPG" },
+      { name: "Marigold", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Marigoldyellow.jpg/320px-Marigoldyellow.jpg" },
+      { name: "Daisy", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Bellis_perennis_white_(aka).jpg/320px-Bellis_perennis_white_(aka).jpg" }
+    ];
+
+    let currentFlower;
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function newGame() {
+      const shuffled = shuffle(flowers);
+      currentFlower = shuffled[0];
+      document.getElementById("flower-img").src = currentFlower.image;
+      document.getElementById("result").textContent = "";
+
+      const options = shuffle([currentFlower, ...shuffled.slice(1, 3)]);
+      const optionButtons = options.map(flower => {
+        return `<button onclick="checkAnswer('${flower.name}')">${flower.name}</button>`;
+      }).join("");
+
+      document.getElementById("options").innerHTML = optionButtons;
+    }
+
+    function checkAnswer(answer) {
+      const result = document.getElementById("result");
+      if (answer === currentFlower.name) {
+        result.textContent = "✅ Correct!";
+        result.style.color = "green";
+      } else {
+        result.textContent = `❌ Oops! It was ${currentFlower.name}.`;
+        result.style.color = "red";
+      }
+      setTimeout(newGame, 2000);
+    }
+
+    newGame();
+  </script>
 </body>
 </html>
